@@ -23,11 +23,11 @@ You can not setup a lan server somewhere and connect to it using a remote web br
 
 First, install apache2, php for Apache and also npm and git
 
-$ sudo apt-get install apache2 libapache2-mod-php php npm git
+	$ sudo apt-get install apache2 libapache2-mod-php php npm git
 
 then, clone the Javica repositorie in your home folder
 
-$ git clone https://github.com/janmeshnet/javica.git
+	$ git clone https://github.com/janmeshnet/javica.git
 
 then, setup a virtual host for Apache, listening on the Javica BASE_PORT (38186)
 
@@ -39,7 +39,7 @@ to set up a virtual host listening on tun0 you will have to perform the followin
 
 Open the apache ports configuration file
 
-$ sudo nano /etc/apache2/ports.conf
+	$ sudo nano /etc/apache2/ports.conf
 
 you'll have then to decide if you still want Apache to listen on the standard 80 and 443 port. If not, you can remove the lines "Listen 80" and "Listen 443" <- this, especially if your meshbox is dedicated to be used only as a visiophony tool. 
 
@@ -51,12 +51,12 @@ In any case, you'll have to add this to tell Apache to listen to the Javica BASE
  
 We need now to disable the default Apache2 sites-available configuration, with the command
 
-$ sudo a2dissite 000-default.conf 
+	$ sudo a2dissite 000-default.conf 
  
 then edit /etc/apache2/sites-available/javica.conf to add a section like this one: 
  
  
-	&lt;VirtualHost *:38186&gt;
+	<VirtualHost *:38186>
 		
 		DocumentRoot /var/www/html/javica
 		
@@ -64,16 +64,16 @@ then edit /etc/apache2/sites-available/javica.conf to add a section like this on
         
         CustomLog ${APACHE_LOG_DIR}/access.log combined
         
-	&lt;/VirtualHost&gt;
+	</VirtualHost>
 
 
 Then make a directory which will be the root of your Javica install: 
 
-$ sudo mkdir /var/www/html/javica 
+	$ sudo mkdir /var/www/html/javica 
 
 You can now enable the newly configured site with
 
-$ sudo a2ensite javica.conf
+	$ sudo a2ensite javica.conf
 
 And a last and important thing: edit /etc/apache2/apache2.conf
 
@@ -82,7 +82,7 @@ And in the section named <Directory /var/www>, change AllowOverride None to Allo
 
 And... You can restart Apache2 with 
 
-$ sudo sysctl reload apache2
+	$ sudo sysctl reload apache2
 
 And that's all for the Apache2 part. 
 
@@ -94,25 +94,25 @@ Now, install and configure the software
  
 Copy the content of the javica/php-www/ folder into /var/www/html/javica and give the www-data user ownership on them: 
 
-$ sudo cp -r ./javica/php-www /var/www/html/javica
+	$ sudo cp -r ./javica/php-www /var/www/html/javica
 
-$ sudo chown -R www-data:www-data /var/www/html/javica
+	$ sudo chown -R www-data:www-data /var/www/html/javica
 
 create a new directory, and changedir to go into it, then init an new npm project, clone peer.js in it
 
-$ mkdir peer.js
+	$ mkdir peer.js
 
-$ cd peer.js
+	$ cd peer.js
 
-$ npm init
+	$ npm init
 
 Press enter several times to validate each field, then install peer.js once you get back to the command line invite : 
 
-$ npm install peer
+	$ npm install peer
 
-then you can run the peering server with the command
+then you can run the peering server *on BASE_PORT +1* with the command
 
-$ nohup ./node_modules/.bin/peerjs --port 38187 &
+	$ nohup ./node_modules/.bin/peerjs --port 38187 &
 
 (TODO: add explanation on how to move this command to .xinitrc)
 
