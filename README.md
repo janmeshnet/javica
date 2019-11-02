@@ -55,7 +55,9 @@ $ sudo a2dissite 000-default.conf
  
 then edit /etc/apache2/sites-available/javica.conf to add a section like this one: 
  
+ 
 <VirtualHost *:38186>
+		
 		DocumentRoot /var/www/html/javica
 		
         ErrorLog ${APACHE_LOG_DIR}/error.log
@@ -63,6 +65,7 @@ then edit /etc/apache2/sites-available/javica.conf to add a section like this on
         CustomLog ${APACHE_LOG_DIR}/access.log combined
         
 </VirtualHost>
+
 
 Then make a directory which will be the root of your Javica install: 
 
