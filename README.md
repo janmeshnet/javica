@@ -11,7 +11,7 @@ This software is still in design stage. Documentation is currently added but the
 ## This software is meant to run over a secured Cjdns virtual network. 
 It should never be run over the internet or over a local lan not operating Cjdns
 ## Its design assume it will be used as a visiophone tool, typically using a meshbox plugged on the living room TV
-There is no per-user accounts nor any kind of protection : any people having access to any user acount on the box will be able to launch the software and to pass/reply to calls using the CA Number associated with the meshbox hosting this software. 
+There is no per-user accounts nor any kind of protection : any people having access to any user acount on the box will be able to launch the software and to make/reply to calls using the CA Number associated with the meshbox hosting this software. 
 Think of it as a kind of phone but featuring video. 
 ## Although the architecture involves a web server, the web server must be on the same machine that the client browser
 You can not setup a lan server somewhere and connect to it using a remote web browser. It simply cannot work. 
