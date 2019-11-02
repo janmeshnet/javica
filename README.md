@@ -37,11 +37,7 @@ For now only one abitrary selected port, namely 38186, is supported by the softw
 
 to set up a virtual host listening on tun0 you will have to perform the following steps: 
 
-1) run the command iwconfig and read its output
-
-The part that is interesting is the address marked "inet" for the interface "tun0" ; example can be 10.0.0.1
-
-2) then open the apache ports configuration file
+Open the apache ports configuration file
 
 $ sudo nano /etc/apache2/ports.conf
 
@@ -60,13 +56,9 @@ $ sudo a2dissite 000-default.conf
 then edit /etc/apache2/sites-available/javica.conf to add a section like this one: 
  
 <VirtualHost *:38186>
-
 		DocumentRoot /var/www/html/javica
-
         ErrorLog ${APACHE_LOG_DIR}/error.log
-
         CustomLog ${APACHE_LOG_DIR}/access.log combined
-
 </VirtualHost>
 
 Then make a directory which will be the root of your Javica install: 
