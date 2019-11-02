@@ -42,6 +42,7 @@ to set up a virtual host listening on tun0 you will have to perform the followin
 The part that is interesting is the address marked "inet" for the interface "tun0" ; example can be 10.0.0.1
 
 2) then open the apache ports configuration file
+
 $ sudo nano /etc/apache2/ports.conf
 
 you'll have then to decide if you still want Apache to listen on the standard 80 and 443 port. If not, you can remove the lines "Listen 80" and "Listen 443" <- this, especially if your meshbox is dedicated to be used only as a visiophony tool. 
@@ -59,9 +60,13 @@ $ sudo a2dissite 000-default.conf
 then edit /etc/apache2/sites-available/javica.conf to add a section like this one: 
  
 <VirtualHost *:38186>
+
 		DocumentRoot /var/www/html/javica
+
         ErrorLog ${APACHE_LOG_DIR}/error.log
+
         CustomLog ${APACHE_LOG_DIR}/access.log combined
+
 </VirtualHost>
 
 Then make a directory which will be the root of your Javica install: 
@@ -92,12 +97,15 @@ Now, install and configure the software
 Copy the content of the javica/php-www/ folder into /var/www/html/javica and give the www-data user ownership on them: 
 
 $ sudo cp -r ./javica/php-www /var/www/html/javica
+
 $ sudo chown -R www-data:www-data /var/www/html/javica
 
 create a new directory, and changedir to go into it, then init an new npm project, clone peer.js in it
 
 $ mkdir peer.js
+
 $ cd peer.js
+
 $ npm init
 
 Press enter several times to validate each field, then install peer.js once you get back to the command line invite : 
@@ -111,3 +119,5 @@ $ nohup ./node_modules/.bin/peerjs --port 38187 &
 (TODO: add explanation on how to move this command to .xinitrc)
 
 ## Configuration
+
+(to come soon...)
