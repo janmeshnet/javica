@@ -1,0 +1,22 @@
+.labelInstanceAddressTop {
+	float:left;
+	text-align:left;
+	}
+.labelLoggedAsAdminTop {
+	float:right;
+	text-align:right;
+	}
+.adminMenuItem {
+	float:left;
+	text-align:left;
+	border-style:solid yellow 1px;
+	border-radius:3px;
+}
+.adminMenuItemSelected {
+	float:left;
+	text-align:left;
+	border-style:solid purple 1px;
+	color:white;
+	background-color:black;
+	border-radius:3px;
+}
