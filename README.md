@@ -57,7 +57,7 @@ then edit /etc/apache2/sites-available/javica.conf to add a section like this on
  
  
 	<VirtualHost *:38186>
-		
+
 		DocumentRoot /var/www/html/javica
 		
         ErrorLog ${APACHE_LOG_DIR}/error.log
