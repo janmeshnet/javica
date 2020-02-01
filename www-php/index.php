@@ -55,7 +55,11 @@ if (file_get_contents('http://127.0.0.1:'.BASEPORT.str_replace('index.php', '', 
 		die ('Fatal ERROR! your ./data directory is accessible from the outside. Please check your web server configuration to prevent this, or data/.htaccess if your using Apache older than 2.4. With 2.4, you should enable AllowOverides All instead of None in apache.conf for the /var/www/(your install dir) directory');
 }
 
-
+//first off we check that the call is made from localhost only
+if ($_SERVER['REMOTE_ADDR']!=='127.0.0.1'&&!isset($_GET['action'])){
+	$ui = new UIUtilities;
+	die(htmlspecialchars($ui->trans('This ressource is not accessible if not reached from the local computer. ', LANG)));
+	}
 
 $uiutils=new UIUtilities();
 $server_instance=new MCPae($uiutils);
@@ -74,6 +78,7 @@ define ('LANG', $lang);
 //main stuff here
 
 //first the stuff that is when we are still unconnected to the network
+// NOT USED
 if (false&&strstr($_SERVER['SERVER_PROTOCOL'], 'HTTPS/')){
 	echo '<!DOCTYPE html><html><head><meta charset="utf-8"/></head>
 			<body>'.$uiutils->
@@ -95,10 +100,14 @@ if (!file_exists('./data/confWizardCompleted.txt')&&!isset($_GET['action'])){
 
 
 if (!isset($_GET['action'])){
+	
+	
+	
 //then the stuff once initial setup is completed
 //and this is not an api call
-//and we are not logged
 //greeter then
+	
+
 	echo $server_instance::$uiutils->getHTMLHead();
 	
 	
