@@ -4,6 +4,7 @@ This software is still in design stage. Documentation is currently added but the
 (quite old) Update: the architecture evolved to a localhost php/www tiers that serves the web browser client, and a peer.js server running locally as well
 
 NEW security update: the code as-is (February 2nd, 2020) uses REMOTE_ADDR to make sure that the UI is served only to localhost. This is a security flaw, since this data can be spoofed. Documentation will soon be updated to setup Apache VHOSTs on two different ports, one for serving the UI that will be bind to 127.0.0.1, and one to expose the inter-instance API that will run on BASE_PORT + 2. Stay tuned. 
+UPDATE to the update: the documentation was updated and the code modified to have the UI part running on a localhost-binded VHOST. Please review this readme and modify your previous install accordingly if you installed Javica befor Feb, 2nd 2020. 
 
 
 
@@ -43,10 +44,11 @@ Open the apache ports configuration file
 
 you'll have then to decide if you still want Apache to listen on the standard 80 and 443 port. If not, you can remove the lines "Listen 80" and "Listen 443" <- this, especially if your meshbox is dedicated to be used only as a visiophony tool. 
 
-In any case, you'll have to add this to tell Apache to listen to the Javica BASE_PORT:
+In any case, you'll have to add this to tell Apache to listen to the Javica BASE_PORT and Javica BASE_PORT+2:
 
 
  Listen 38186
+ Listen 38188
  
  
 We need now to disable the default Apache2 sites-available configuration, with the command
@@ -56,7 +58,7 @@ We need now to disable the default Apache2 sites-available configuration, with t
 then edit /etc/apache2/sites-available/javica.conf to add a section like this one: 
  
  
-	<VirtualHost *:38186>
+	<VirtualHost 127.0.0.1:38186>
 	DocumentRoot /var/www/html/javica
 		
     ErrorLog ${APACHE_LOG_DIR}/error.log
@@ -64,14 +66,32 @@ then edit /etc/apache2/sites-available/javica.conf to add a section like this on
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 	</VirtualHost>
 
+Note: the 127.0.0.1 part of this VHOST configuration is really important. It is needed to make sure that only the local computer can access the application (i.e. list your contact, make calls and so on). 
+
+then edit as well /etc/apache2/sites-available/javica-api.conf with a section like the following:
+
+	<VirtualHost *:38188>
+	DocumentRoot /var/www/html/javica-api
+		
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+        
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+	</VirtualHost>
+
+
 
 Then make a directory which will be the root of your Javica install: 
 
 	$ sudo mkdir /var/www/html/javica 
 
-You can now enable the newly configured site with
+And for the API part of the software
+
+	$ sudo mkdir /var/www/html/javica-api
+
+You can now enable the newly configured sites with
 
 	$ sudo a2ensite javica.conf
+	$ sudo a2ensite javica-api.conf
 
 And a last and important thing: edit /etc/apache2/apache2.conf
 
@@ -95,6 +115,14 @@ Copy the content of the javica/php-www/ folder into /var/www/html/javica and giv
 	$ sudo cp -r ./javica/php-www /var/www/html/javica
 
 	$ sudo chown -R www-data:www-data /var/www/html/javica
+
+And as well, copy the content of the javica/api folder into /var/www/html/javica-api
+
+	$ sudo cp -r ./javica/api /var/www/html/javica-api
+
+	$ sudo chown -R www-data:www-data /var/www/html/javica-api
+
+
 
 create a new directory, and changedir to go into it, then init an new npm project, clone peer.js in it
 
