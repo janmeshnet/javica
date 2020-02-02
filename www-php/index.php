@@ -56,7 +56,7 @@ if (file_get_contents('http://127.0.0.1:'.BASEPORT.str_replace('index.php', '', 
 }
 
 //first off we check that the call is made from localhost only
-if ($_SERVER['REMOTE_ADDR']!=='127.0.0.1'&&!isset($_GET['action'])){
+if (!($_SERVER['REMOTE_ADDR']=='127.0.0.1'||$_SERVER['REMOTE_ADDR']=='::1')&&!isset($_GET['action'])){
 	$ui = new UIUtilities;
 	die(htmlspecialchars($ui->trans('This ressource is not accessible if not reached from the local computer. ', LANG)));
 	}
