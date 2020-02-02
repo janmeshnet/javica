@@ -47,8 +47,8 @@ you'll have then to decide if you still want Apache to listen on the standard 80
 In any case, you'll have to add this to tell Apache to listen to the Javica BASE_PORT and Javica BASE_PORT+2:
 
 
- Listen 38186
- Listen 38188
+	Listen 38186
+	Listen 38188
  
  
 We need now to disable the default Apache2 sites-available configuration, with the command
