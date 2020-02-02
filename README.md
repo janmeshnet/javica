@@ -64,7 +64,7 @@ then edit /etc/apache2/sites-available/javica.conf to add a section like this on
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 	</VirtualHost>
 
-Note: the 127.0.0.1 part of this VHOST configuration is really important. It is needed to make sure that only the local computer can access the application (i.e. list your contact, make calls and so on). 
+Note: the 127.0.0.1 part of this VHOST configuration is really important. It is needed to make sure that only the local computer can access the application (i.e. list your contacts, make calls and so on). 
 
 then edit as well /etc/apache2/sites-available/javica-api.conf with a section like the following:
 
