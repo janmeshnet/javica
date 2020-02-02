@@ -3,8 +3,8 @@ This software is still in design stage. Documentation is currently added but the
 
 (quite old) Update: the architecture evolved to a localhost php/www tiers that serves the web browser client, and a peer.js server running locally as well
 
-NEW security update: the code as-is (February 2nd, 2020) uses REMOTE_ADDR to make sure that the UI is served only to localhost. This is a security flaw, since this data can be spoofed. Documentation will soon be updated to setup Apache VHOSTs on two different ports, one for serving the UI that will be bind to 127.0.0.1, and one to expose the inter-instance API that will run on BASE_PORT + 2. Stay tuned. 
-UPDATE to the update: the documentation was updated and the code modified to have the UI part running on a localhost-binded VHOST. Please review this readme and modify your previous install accordingly if you installed Javica befor Feb, 2nd 2020. 
+NEW security update: the code as-is (February 2nd, 2020) uses REMOTE_ADDR to make sure that the UI is served only to localhost. This is a security flaw, since this data can be spoofed. Documentation will soon be updated to setup Apache VHOSTs on two different ports, one for serving the UI that will be bound to 127.0.0.1, and one to expose the inter-instance API that will run on BASE_PORT + 2. Stay tuned. 
+UPDATE to the update: the documentation was updated and the code modified to have the UI part running on a localhost-bound VHOST. Please review this readme and modify your previous install accordingly if you installed Javica befor Feb, 2nd 2020. 
 
 
 
