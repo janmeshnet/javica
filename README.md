@@ -34,9 +34,7 @@ then, setup a virtual host for Apache, listening on the Javica BASE_PORT (38186)
 
 ### Apache2 VHOST configuration
 
-For now only one abitrary selected port, namely 38186, is supported by the software. 
-
-to set up a virtual host listening on tun0 you will have to perform the following steps: 
+We'll need to setup two virtual hosts, one for the UI part meant to be accessed from localhost only, and the other one for the API part which will be reachable from the outside. 
 
 Open the apache ports configuration file
 
