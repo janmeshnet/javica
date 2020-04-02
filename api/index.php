@@ -2,5 +2,7 @@
 if (!isset($_GET['action'])) {
 		$_GET['action']='null';
 	}
-require_once ('../javica/index.php');
+chdir('../javica');
+require_once ('./index.php');
+chdir('../javica-api');
 ?>
