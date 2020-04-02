@@ -1,6 +1,10 @@
 # javica
 This software is still in design stage. Documentation is currently added but there is *no* useful code available !
 
+The next part of coding should be client-side javascript following codes examples found at Peerjs.com 
+
+
+
 (quite old) Update: the architecture evolved to a localhost php/www tiers that serves the web browser client, and a peer.js server running locally as well
 
 NEW security update: the code as-is (February 2nd, 2020) uses REMOTE_ADDR to make sure that the UI is served only to localhost. This is a security flaw, since this data can be spoofed. Documentation will soon be updated to setup Apache VHOSTs on two different ports, one for serving the UI that will be bound to 127.0.0.1, and one to expose the inter-instance API that will run on BASE_PORT + 2. Stay tuned.
@@ -30,8 +34,6 @@ First, install apache2, php for Apache and also npm and git
 then, clone the Javica repositorie in your home folder
 
 	$ git clone https://github.com/janmeshnet/javica.git
-
-then, setup a virtual host for Apache, listening on the Javica BASE_PORT (38186)
 
 ### Apache2 VHOST configuration
 
