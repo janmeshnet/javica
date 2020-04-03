@@ -21,7 +21,7 @@ class MCPae {
 	
 		$contactList=explode("\n", trim(file_get_contents('./data/users/contacts.txt')));
 		for ($i=0;$i<count($contactList);$i++){
-			$this::$contacts[$contactList[$i]]=$contactList[$i+1];
+			$this::$contacts[trim($contactList[$i])]=trim($contactList[$i+1]);
 			$i++;
 		}
 	}
@@ -100,10 +100,11 @@ class confWizard {
 					//check is ipv6 is really ours ? 
 					$youcancheck=false;
 					$token=microtime(true);
+					
 					/* if (file_get_contents('https://['.$myip.']'.str_replace('index.php', '', $_SERVER['PHP_SELF']).'?checkipv6isours='.$token)=='written'){
 						$youcancheck=true;
 					}
-					else */ if (file_get_contents('http://['.$myip.']:'.BASEPORT.str_replace('index.php', '', $_SERVER['PHP_SELF']).'?checkipv6isours='.$token)=='written'){
+					else */ if (file_get_contents('http://['.$myip.']:38188/?action=conf&checkipv6isours='.$token)==='written'){
 						$youcancheck=true;
 						}
 					else {
@@ -113,7 +114,7 @@ class confWizard {
 					
 					if ($youcancheck){
 						$remotetoken=trim(file_get_contents('./data/admin/ipisours.txt'));
-						if (trim(str_replace($remotetoken, '', $token))===''){
+						if (trim(str_replace($remotetoken, '', $token))==''){
 							//here we are, the step is fullfilled
 							$this::$jasede_instance->setIPv6(trim($_POST['setipv6']));
 							$this::$jasede_instance->saveIPv6ToDisk();
@@ -214,7 +215,7 @@ class UIUtilities {
 		
 	function getIPv6AskPanel(){
 		$output='';
-		$output.='<form action="./?itsmyip=1" method="POST">';
+		$output.='<form action="./?action=conf&itsmyip=1" method="POST">';
 		$output.=htmlspecialchars($this->trans('IPv6 address: ',LANG)).' <input type="text" name="setipv6"/><br/>';
 		$output.='<input type="submit" name="submit"/>';
 		$output.='</form>';
@@ -232,21 +233,24 @@ class UIUtilities {
 }
 class networkUtilities {
 	function checkIfIPv6IsValid($addr){
-		return inet_pton($addr);
+		return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
 		
 	}
 }
 class APIStack {
 	function dispatchAction ($action, Array $params, Array $postparams){
-		header('content-type: text/plain');
 		
 		switch ($action){
 			case 'ping':
+				header('content-type: text/plain');
 				$this->processPing();
 				die();
 			case 'poke':
+				header('content-type: text/plain');
 				$this->processPoke();
 				die();
+			case 'conf':
+				$this->processConf();
 		
 		
 		}
@@ -257,7 +261,8 @@ class APIStack {
 		
 	}
 	function processPoke(){
-		if (true)
+		$server = new MCPae(new UIUtilities());
+		if (in_array($_SERVER['REMOTE_ADDR'], array_keys($server::$contacts)))
 			{
 			$data=Array ();
 			$data['action']='pingued';
@@ -275,6 +280,11 @@ class APIStack {
 			
 				die();
 			}
+	}
+	function processConf(){
+		$wizard = new confWizard(new MCPae(new UIUtilities));
+		$wizard->doStuff();
+		die();
 	}
 }
 class AJAXStack {
@@ -298,7 +308,6 @@ class AJAXStack {
 	function processRefresh(){
 		$serv=new MCPae(new UIUtilities());
 		
-		
 		$files = array_diff(scandir('./data/users/log'), Array('..', '.'));
 		sort($files);
 		$files = array_reverse($files);
@@ -320,7 +329,7 @@ class AJAXStack {
 			}
 		else if ($data['action']==='pingued'){
 			$who=$data['param'][0];
-			echo htmlspecialchars($serv::$uiutils->trans('Your have received a ping poke. ', LANG));
+			echo htmlspecialchars($serv::$uiutils->trans('You have received a ping poke. ', LANG));
 			echo '<br/>';
 			echo htmlspecialchars($serv::$uiutils->trans('Who: ', LANG).$serv->getNameFromIp($who));
 			echo ' - ';

@@ -106,7 +106,7 @@ if (false&&strstr($_SERVER['SERVER_PROTOCOL'], 'HTTPS/')){
 	}
 	
 	
-if (!file_exists('./data/confWizardCompleted.txt')&&!isset($_GET['action'])){
+if (!file_exists('./data/confWizardCompleted.txt')&&!isset($_GET['action'])&&!isset($_GET['ajax'])){
 	$wizard = new confWizard($server_instance, $uiutils);
 	$wizard->doStuff();
 	die();
