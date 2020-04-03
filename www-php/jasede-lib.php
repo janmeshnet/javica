@@ -9,15 +9,21 @@ class MCPae {
 	
 	static $peerlist=Array();
 	
+	static $contacts=Array();
+	
 	public function __construct(UIutilities $ui){
 		
 		$this::$uiutils=$ui;
 		
 		//let's load the configuration saved
 		
-			$this::$ipv6 = trim(file_get_contents('./data/admin/conf/ipv6.txt'));
-			//$this::$peerlist = file_get_contents('./data/admin/conf/peerlist.txt');
-		
+		$this::$ipv6 = trim(file_get_contents('./data/admin/conf/ipv6.txt'));
+	
+		$contactList=explode("\n", trim(file_get_contents('./data/users/contacts.txt')));
+		for ($i=0;$i<count($contactList);$i++){
+			$this::$contacts[$contactList[$i]]=$contactList[$i+1];
+			$i++;
+		}
 	}
 	function isIPv6Set(){
 		return file_exists('./data/admin/conf/ipv6.txt');
@@ -36,10 +42,22 @@ class MCPae {
 		return str_replace('/index.php', '', $_SERVER['PHP_SELF']);
 	}
 
-	function ping ($ip6addr, $mountpoint, $port=38186){
-		return boolval (file_get_contents('http://['.$ip6addr.']:'+$port+'/'.$mountpoint.'/?action=ping'));
+	function ping ($ip6addr, $mountpoint='/', $port=38188){
+		return boolval (trim(file_get_contents('http://['.$ip6addr.']:'.$port.$mountpoint.'/?action=ping')));
 	}
-}
+	function poke ($ip6addr, $mountpoint='/', $port=38188){
+			return boolval (trim(file_get_contents('http://['.$ip6addr.']:'.$port.$mountpoint.'/?action=poke')));
+			}
+	function getNameFromIp($ip6addr){
+		
+			return $this::$contacts[$ip6addr];
+	
+		
+		}
+	}
+	
+	
+
 
 class confWizard {
 	private static $uiutils=null;
@@ -225,11 +243,124 @@ class APIStack {
 		switch ($action){
 			case 'ping':
 				$this->processPing();
-				break;
+				die();
+			case 'poke':
+				$this->processPoke();
+				die();
+		
+		
 		}
 	}
 	function processPing(){
 		echo '1';
+	
+		
+	}
+	function processPoke(){
+		if (true)
+			{
+			$data=Array ();
+			$data['action']='pingued';
+			$data['param']=Array($_SERVER['REMOTE_ADDR']);
+			if (file_put_contents('./data/users/log/'.microtime(true),
+									serialize($data))){
+					echo '1';
+				}
+				else{
+					die();
+				}
+			}
+		else
+			{
+			
+				die();
+			}
+	}
+}
+class AJAXStack {
+	function dispatchAction ($action, Array $params, Array $postparams){
+		header('content-type: text/plain');
+		
+		switch ($action){
+			case 'refresh':
+				$this->processRefresh();
+				die();
+				
+			case 'ping':
+				$this->processPing(htmlspecialchars_decode($params['target']));
+				die();
+			case 'poke':
+				$this->processPoke(htmlspecialchars_decode($params['target']));
+				die();
+			
+		}
+	}
+	function processRefresh(){
+		$serv=new MCPae(new UIUtilities());
+		
+		
+		$files = array_diff(scandir('./data/users/log'), Array('..', '.'));
+		sort($files);
+		$files = array_reverse($files);
+		foreach ($files as $file) {
+		$filepath = './data/users/log/'.$file;
+		
+		$data = unserialize(file_get_contents($filepath));
+		
+		if ($data['action']==='pinging'){
+			$who=$data['param'][0];
+			$time=$data['param'][1];
+			echo htmlspecialchars($serv::$uiutils->trans('Your ping has been echoed. ', LANG));
+			echo '<br/>';
+			echo htmlspecialchars($serv::$uiutils->trans('Who: ', LANG).$serv->getNameFromIp($who));
+			echo ' - ';
+			echo htmlspecialchars($serv::$uiutils->trans('Time: ', LANG).$time);
+
+			
+			}
+		else if ($data['action']==='pingued'){
+			$who=$data['param'][0];
+			echo htmlspecialchars($serv::$uiutils->trans('Your have received a ping poke. ', LANG));
+			echo '<br/>';
+			echo htmlspecialchars($serv::$uiutils->trans('Who: ', LANG).$serv->getNameFromIp($who));
+			echo ' - ';
+			echo htmlspecialchars($serv::$uiutils->trans('Time: ', LANG).date(DATE_RSS, $file));
+
+			
+			}
+
+
+			//else if action autre chose
+		echo '<hr/>'; 
+		}//foreach entry
+		
+	}
+	function processPoke($ip){
+		$serv=new MCPae(new UIUtilities());
+		
+		$start=microtime(true);
+			$branch=$serv->poke($ip);
+			if ($branch){
+				$stop=microtime(true);
+				
+				$time=$stop-$start;
+				$wrap=Array();
+				$wrap['action']='pinging';
+				$wrap['param']=Array ($ip, $time. ' s');
+				$data=serialize($wrap);
+				
+		
+				return file_put_contents('./data/users/log/'.microtime(true), $data);
+				}
+			
+			else {
+				return $branch;
+			}	
+	}
+	function processPing($ip){
+		$serv=new MCPae(new UIUtilities());
+		
+		return $serv->ping($ip);
 		
 	}
 

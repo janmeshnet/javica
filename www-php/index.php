@@ -1,4 +1,17 @@
 <?php
+/****
+ * 18:16 <+chatgrillon> il faut d'abord que l'appelé instancie sa connection au peer.js local et récupère son ID
+18:17 <+chatgrillon> ensuite, l'ID est passée par le javascript, au Apache/PHP qui la garde sous la main
+18:17 <+chatgrillon> disons l'appelant
+18:17 <+chatgrillon> il lance un appel
+18:17 <+chatgrillon> son client va faire une requète AJAX à son propre serveur Apache/PHP en localhost
+18:17 <+chatgrillon> qui dira "je veux passer un appel vers <telle ipV6>"
+18:18 <+chatgrillon> son serveur PHP va contacter le serveur PHP qui est à cette adresse
+18:18 <+chatgrillon> ce dernier va vérifier que l'IP d'origine est bien présente dans les contacts du receveur (très important)
+18:19 <+chatgrillon> et va lui passer l'ID du receveur
+***/
+
+
 session_start();
 require_once('./jasede-lib.php');
 
@@ -39,6 +52,10 @@ if (!file_exists('./data/conf')){
 }
 if (!file_exists('./data/users')){
 	mkdir('./data/users');
+	
+}
+if (!file_exists('./data/users/log')){
+	mkdir('./data/users/log');
 	
 }
 if (!file_exists('./data/modules')){
@@ -99,7 +116,7 @@ if (!file_exists('./data/confWizardCompleted.txt')&&!isset($_GET['action'])){
 
 
 
-if (!isset($_GET['action'])){
+if (!isset($_GET['action'])&&!isset($_GET['ajax'])){
 	
 	
 	
@@ -109,12 +126,74 @@ if (!isset($_GET['action'])){
 	
 
 	echo $server_instance::$uiutils->getHTMLHead();
+	echo '<hr>';
+	echo '<script>
+	function ping(){
+			var xhttp = new XMLHttpRequest();
+		  
+		  xhttp.open("GET", "./?ajax=poke&target="+encodeURI(document.getElementById("target").value), true);
+		  xhttp.send();
+				}
+	
+	</script>';
+	echo $server_instance::$uiutils->trans('Send a ping poke: ', LANG);
+	echo '<span style="display:inline;">';
+	
+	echo '<select id="target">';
+	$keys=array_keys($server_instance::$contacts);
+	$selected=false;
+	foreach ($keys as $key){
+			echo '<option value="'.htmlspecialchars($key).'"
+			
+						  
+			';
+			if (!$selected){
+				echo ' selected ';
+				$selected=true;
+				}
+			echo '>';
+			echo htmlspecialchars($server_instance::$contacts[$key]);	
+			echo '</option>';	 
+			
+	} 
+	echo '</select>';
+	
+	echo '<button onclick="ping();">poke</button>';
+	
+	echo '</span>'; 
+	echo '<hr/>';
+	echo '<div style="background-color:black; border: solid green 1px; width: 100%;"></div>';
+	echo '<hr/>';
+	echo '<script>
+	function refresh(){
+			var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				document.getElementById("main").innerHTML=this.responseText;
+			 
+			}
+		  };
+		  xhttp.open("GET", "?ajax=refresh", true);
+		  xhttp.send();
+				}
+	
+	setInterval(refresh, 5000);
+	</script>';
 	
 	
+	
+	
+	echo '<div id="main"></div>';
 	echo $server_instance::$uiutils->getHTMLFooter();
 	die();
 } 
+if (isset($_GET['ajax'])){
+	$api=new AJAXStack();
+	$actionarray=Array();
+	$api->dispatchAction($_GET['ajax'], $_GET, $_POST);
 
+	die();
+} 
 
 //first
 //okay, we're online, update the ts
