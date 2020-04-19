@@ -113,13 +113,13 @@ Now, install and configure the software
  
 Copy the content of the javica/php-www/ folder into /var/www/html/javica and give the www-data user ownership on them: 
 
-	$ sudo cp -r ./javica/php-www /var/www/html/javica
+	$ sudo cp -r ./javica/php-www/* /var/www/html/javica
 
 	$ sudo chown -R www-data:www-data /var/www/html/javica
 
 And as well, copy the content of the javica/api folder into /var/www/html/javica-api
 
-	$ sudo cp -r ./javica/api /var/www/html/javica-api
+	$ sudo cp -r ./javica/api/* /var/www/html/javica-api
 
 	$ sudo chown -R www-data:www-data /var/www/html/javica-api
 
