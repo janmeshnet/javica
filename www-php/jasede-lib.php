@@ -42,10 +42,10 @@ class MCPae {
 		return str_replace('/index.php', '', $_SERVER['PHP_SELF']);
 	}
 
-	function ping ($ip6addr, $mountpoint='/', $port=38188){
+	function ping ($ip6addr, $mountpoint='', $port=38188){
 		return boolval (trim(file_get_contents('http://['.$ip6addr.']:'.$port.$mountpoint.'/?action=ping')));
 	}
-	function poke ($ip6addr, $mountpoint='/', $port=38188){
+	function poke ($ip6addr, $mountpoint='', $port=38188){
 			return boolval (trim(file_get_contents('http://['.$ip6addr.']:'.$port.$mountpoint.'/?action=poke')));
 			}
 	function getNameFromIp($ip6addr){
@@ -233,8 +233,9 @@ class UIUtilities {
 }
 class networkUtilities {
 	function checkIfIPv6IsValid($addr){
-		return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
-		
+		//return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+		return true;
+		//this function needs complete rewrite
 	}
 }
 class APIStack {
