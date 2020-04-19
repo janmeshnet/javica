@@ -130,7 +130,12 @@ if (!isset($_GET['action'])&&!isset($_GET['ajax'])){
 	echo '<script>
 	function ping(){
 			var xhttp = new XMLHttpRequest();
-		  
+			
+			xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status != 200) {
+				ping();
+			}
+		  }
 		  xhttp.open("GET", "./?ajax=poke&target="+encodeURI(document.getElementById("target").value), true);
 		  xhttp.send();
 				}
