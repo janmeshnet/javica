@@ -1,9 +1,11 @@
 # javica
 This software is still in design stage. Documentation is currently added but there is *no* useful code available !
 
+
+
 The next part of coding should be client-side javascript following codes examples found at Peerjs.com 
 
-
+UPDATE 20200404: The software is configurable (point your browser at localhost:38186) and handle an inter-instance pinging procedure, providing a ./data/users/contacts.txt file is provided, containing, on the first line a CJDNS IPv6 Adress, on the second line an human readable name, and so on for more contacts, unix-style end-of-lines. 
 
 (quite old) Update: the architecture evolved to a localhost php/www tiers that serves the web browser client, and a peer.js server running locally as well
 
