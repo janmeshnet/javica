@@ -126,7 +126,7 @@ And as well, copy the content of the javica/api folder into /var/www/html/javica
 	$ sudo chown -R www-data:www-data /var/www/html/javica-api
 
 
-
+//**THIS, is currently not needed, but kept for reference, for the day Javica will start using WebRTC for video calls**/
 create a new directory, and changedir to go into it, then init an new npm project, clone peer.js in it
 
 	$ mkdir peer.js
@@ -144,7 +144,9 @@ then you can run the peering server *on BASE_PORT +1* with the command
 	$ nohup ./node_modules/.bin/peerjs --port 38187 &
 
 (TODO: add explanation on how to move this command to .xinitrc)
+//**END, of the currently not needed part
+
 
 ## Configuration
+Point your browser too http://localhost:38186/ and follow on-screen instructions. 
 
-(to come soon...)
